@@ -20,6 +20,15 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+# use Grape API as framework to develop RESTful APIs
+gem 'grape'
+gem 'grape_on_rails_routes'
+# Formatting
+gem 'rubocop'
+gem 'rbenv'
+# Testing
+gem 'rspec'
+gem 'rspec-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
