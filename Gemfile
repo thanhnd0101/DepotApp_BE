@@ -27,8 +27,13 @@ gem 'grape_on_rails_routes'
 gem 'rubocop'
 gem 'rbenv'
 # Testing
-gem 'rspec'
 gem 'rspec-rails'
+gem 'rack-test'
+# Json response
+source 'https://gem.fury.io/eh-devops/' do
+  gem 'google_json_response'
+end
+
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -60,3 +65,29 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+group :test do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'capybara', '2.7.1'
+  gem 'faker'
+  gem 'fakeredis', require: 'fakeredis/rspec'
+  gem 'json_matchers'
+  gem 'json_spec'
+  gem 'launchy'
+  gem 'pdf-reader'
+  gem 'rack_session_access'
+  gem 'rails-controller-testing', require: false
+  gem 'rb-fsevent', '~> 0.10'
+  gem 'rspec-activemodel-mocks'
+  gem 'rspec-collection_matchers'
+  gem 'rspec-instafail'
+  gem 'rspec-its'
+  gem 'rspec_junit_formatter', '~> 0.4'
+  gem 'selenium-webdriver', '3.4.4'
+  gem 'webdrivers', '~> 4.6.1', require: false
+  gem 'shoulda-matchers', '~> 4.0.1'
+  gem 'test-prof'
+  gem 'vcr'
+  gem 'webmock', '~> 3.5.1', require: false
+  gem 'websocket-driver', '~> 0.6.5'
+end

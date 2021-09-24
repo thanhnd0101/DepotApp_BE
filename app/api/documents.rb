@@ -1,3 +1,4 @@
+
 class Documents < Grape::API
   desc 'End-point for documents'
 
@@ -21,6 +22,6 @@ class Documents < Grape::API
   end
 
   get do
-    'Welcome to documents get api'
+    Document.all.as_json
   end
 end
