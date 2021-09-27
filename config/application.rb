@@ -12,7 +12,7 @@ module DepotAppBe
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     # Grape API
-    config.paths.add File.join('app', 'depot_api'), glob: File.join('**', '*.rb')
-    config.autoload_paths += Dir[Rails.root.join('app', 'depot_api', '*')]
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
   end
 end

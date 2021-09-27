@@ -45,6 +45,7 @@ GEM
     afm (0.2.2)
     arel (7.1.4)
     ast (2.4.2)
+    bcrypt (3.1.16)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -327,6 +328,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   better_errors
   binding_of_caller
   byebug

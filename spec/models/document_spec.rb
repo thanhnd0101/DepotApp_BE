@@ -13,21 +13,21 @@ RSpec.describe Document, type: :model do
                  price: 1,
                  image_url: image_url)
   end
-  def new_invoice()
-    Invoice.new
+  def new_cart()
+    Cart.new
   end
-  def new_line_item(document_id, invoice_id)
+  def new_line_item(document_id, cart_id)
     LineItem.new({
                    document_id:document_id,
-                   invoice_id:invoice_id
+                   cart_id:cart_id
                  })
   end
   def dummy_line_item()
     document = new_document('12.jpg')
-    invoice = new_invoice()
+    cart = new_cart()
     LineItem.new({
                    document_id:document.id,
-                   invoice_id:invoice.id
+                   cart_id:cart.id
                  })
   end
   context 'DocumentTest' do
@@ -65,12 +65,12 @@ RSpec.describe Document, type: :model do
       end
     end
 
-    it 'cannot delete document in invoice' do
+    it 'cannot delete document in cart' do
       document = create_document('12.jpg')
-      invoice = Invoice.create
+      cart = Cart.create
       line_item = LineItem.create({
                                      document_id:document.id,
-                                     invoice_id:invoice.id,
+                                     cart_id:cart.id,
                                })
       expect{Document.find(document.id).destroy!}.to raise_error
     end

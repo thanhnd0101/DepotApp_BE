@@ -1,6 +1,10 @@
 class LineItems < Grape::API
-
   desc 'End-points for line items'
+  helpers CurrentCart
+
+  before do
+    authorize
+  end
 
   get do
     LineItem.all.to_json
@@ -8,14 +12,17 @@ class LineItems < Grape::API
 
   params do
     requires :document_id, type: Integer
+    optional :cart_id, type: Integer
   end
   post do
     document = Document.find(params[:document_id])
-    invoice = Invoice.create
-    @line_item = LineItem.new({
-                                   document_id: document.id,
-                                   invoice_id: invoice.id
-                                 })
+    cart = if !params[:cart_id].nil?
+                Cart.find(params[:cart_id])
+              else
+                Cart.create
+              end
+    @line_item = cart.add_document(document);
+
     if @line_item.save
       return @line_item.to_json
     else
