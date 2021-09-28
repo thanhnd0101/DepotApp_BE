@@ -5,9 +5,13 @@ I work on this project for rails learning purpose and convert it to an digital a
 
 # First sketch
 ![Sketch](/project_description/DepotApp_FK.png)
+
+# Database diagram
+![DatabaseDiagram](project_description/Depot%20App.png)
+
 # Feature
 
-## First stage (support image url only)
+## First stage API (support image url only)
 
 - Upload an Document(title, description, image_url, price)
 - Selling documents

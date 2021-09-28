@@ -23,10 +23,6 @@ class LineItems < Grape::API
               end
     @line_item = cart.add_document(document);
 
-    if @line_item.save
-      return @line_item.to_json
-    else
-      return GoogleJsonResponse.render_error(@line_item.errors)
-    end
+    @line_item.save ? @line_item.to_json : GoogleJsonResponse.render_error(@line_item.errors)
   end
 end

@@ -1,6 +1,6 @@
 class API < Grape::API
 
-  version 'v1', using: :path
+  # version 'v1', using: :path
   helpers do
     def session
       env['rack.session']
