@@ -1,7 +1,8 @@
 # Cart class
 class Cart < ApplicationRecord
-
   has_many :line_items, dependent: :destroy
+
+  validates :user_id, presence: true
 
   def set_cart
     @cart = Cart.find(session[:cart_id])

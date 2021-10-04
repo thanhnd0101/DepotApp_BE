@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210927045620) do
+ActiveRecord::Schema.define(version: 20211004134105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,15 +18,20 @@ ActiveRecord::Schema.define(version: 20210927045620) do
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
   end
 
   create_table "documents", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
     t.string   "image_url"
-    t.decimal  "price",       precision: 8, scale: 2
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.decimal  "price",           precision: 8, scale: 2
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.integer  "user_id"
+    t.integer  "upload_image_id"
+    t.index ["user_id"], name: "index_documents_on_user_id", using: :btree
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -48,6 +53,19 @@ ActiveRecord::Schema.define(version: 20210927045620) do
     t.integer  "pay_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_orders_on_user_id", using: :btree
+  end
+
+  create_table "upload_media", force: :cascade do |t|
+    t.string   "file_name"
+    t.string   "path"
+    t.string   "media_type"
+    t.integer  "document_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "identifier"
+    t.index ["document_id"], name: "index_upload_media_on_document_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -57,7 +75,11 @@ ActiveRecord::Schema.define(version: 20210927045620) do
     t.datetime "updated_at",      null: false
   end
 
+  add_foreign_key "carts", "users"
+  add_foreign_key "documents", "users"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "documents"
   add_foreign_key "line_items", "orders"
+  add_foreign_key "orders", "users"
+  add_foreign_key "upload_media", "documents"
 end

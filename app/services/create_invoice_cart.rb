@@ -1,5 +1,5 @@
 module DamView
-  class CreateCartService
+  class CreateCartService < ApplicationService
 
     def call
       set_cart

@@ -25,4 +25,5 @@ class API < Grape::API
   mount Login => '/login'
   mount Sessions => '/sessions'
   mount Admin => '/admin'
+  mount UploadMedias => '/uploadmedias'
 end
