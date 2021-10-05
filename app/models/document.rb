@@ -1,4 +1,5 @@
 class Document < ApplicationRecord
+  belongs_to :user
   has_many :line_items
   has_many :orders, through: :line_items
   has_many :upload_media, dependent: :destroy
@@ -10,6 +11,13 @@ class Document < ApplicationRecord
     with: /\.(gif|jpg|png)\z/i,
     message: "must be a URL for GIF, JPG, or PNG"
   }
+  validates :publish, inclusion: {in:[true , false]}
+
+  scope :published, ->{where(publish: true)}
+
+  scope :by_user, ->(user_id){ joins(:user).where(user_id: user_id)}
+
+  scope :related_images, -> {joins(:upload_media)}
 
   private
   def ensure_not_referenced_by_any_line_item

@@ -4,7 +4,6 @@ class Orders < Grape::API
 
   helpers CurrentCart
 
-
   namespace do
     before do
       authorize
@@ -25,17 +24,19 @@ class Orders < Grape::API
                            name: params[:name],
                            address: params[:address],
                            email: params[:email],
-                           pay_type: Order.pay_types[params[:pay_type]]
+                           pay_type: Order.pay_types[params[:pay_type]],
+                           user_id: session[:user_id]
                          })
       @order.add_line_items_from_cart(@cart)
       @order.save!
 
-      {
-        message: 'Success'
-      }
+      # reset cart
+      session[:cart_id] = nil
+
+      @order.as_json
     rescue StandardError => e
       {
-        message: 'Failed'
+        message: e.message
       }
     end
   end

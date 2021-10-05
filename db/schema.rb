@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20211004134105) do
+ActiveRecord::Schema.define(version: 20211005033653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20211004134105) do
     t.datetime "updated_at",                              null: false
     t.integer  "user_id"
     t.integer  "upload_image_id"
+    t.boolean  "publish"
     t.index ["user_id"], name: "index_documents_on_user_id", using: :btree
   end
 
@@ -59,11 +60,11 @@ ActiveRecord::Schema.define(version: 20211004134105) do
 
   create_table "upload_media", force: :cascade do |t|
     t.string   "file_name"
-    t.string   "path"
+    t.string   "relative_path"
     t.string   "media_type"
     t.integer  "document_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.string   "identifier"
     t.index ["document_id"], name: "index_upload_media_on_document_id", using: :btree
   end

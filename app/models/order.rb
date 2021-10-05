@@ -1,10 +1,15 @@
 class Order < ApplicationRecord
   has_many :line_items, dependent: :destroy
+  belongs_to :user
+  has_many :documents, through: :line_items
+  has_many :upload_media, through: :documents
+
+  scope :by_user, ->(user_id){ joins(:user).where(user_id: user_id)}
+  scope :related_images, -> { joins(:upload_media)}
 
   enum pay_types: {
-    'Check' => 0,
+    'Cash' => 0,
     'Credit card' => 1,
-    'Purchase order' => 2
   }
 
   validates :name, :address, :email, :user_id, presence: true

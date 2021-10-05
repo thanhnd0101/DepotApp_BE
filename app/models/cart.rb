@@ -1,8 +1,13 @@
 # Cart class
 class Cart < ApplicationRecord
   has_many :line_items, dependent: :destroy
+  belongs_to :user
+  has_many :documents, through: :line_items
+  has_many :upload_media, through: :documents
 
   validates :user_id, presence: true
+  scope :by_user, ->(user_id){ joins(:user).where(user_id: user_id)}
+  scope :related_images, -> { joins(:upload_media)}
 
   def set_cart
     @cart = Cart.find(session[:cart_id])
@@ -14,7 +19,7 @@ class Cart < ApplicationRecord
       current_line_item.quantity = 0 unless current_line_item.quantity
       current_line_item.quantity += 1
     else
-      current_line_item = line_items.build(document_id:document.id)
+      current_line_item = line_items.build(document_id: document.id, quantity:1)
     end
     current_line_item
   end

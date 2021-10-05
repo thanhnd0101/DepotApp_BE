@@ -20,6 +20,7 @@ class API < Grape::API
   mount Documents => '/documents'
   mount Dam => '/dam'
   mount LineItems => '/lineitems'
+  mount Carts => '/carts'
   mount Orders => '/orders'
   mount Users => '/users'
   mount Login => '/login'

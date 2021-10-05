@@ -7,7 +7,7 @@ class Dam < Grape::API
     set_cart
   end
   get do
-    redirect "/api/documents"
+    Document.joins(:upload_media).merge(Document.published).as_json
   end
 
 
