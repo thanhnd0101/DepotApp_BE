@@ -7,7 +7,7 @@ I work on this project for rails learning purpose and convert it to an digital a
 ![Sketch](/project_description/DepotApp_FK.png)
 
 # Database diagram
-![DatabaseDiagram](project_description/Depot%20App.png)
+[Diagram](https://dbdiagram.io/d/6152c570825b5b01461645f2)
 
 # Feature
 
