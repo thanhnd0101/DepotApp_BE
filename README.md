@@ -27,6 +27,11 @@ I work on this project for rails learning purpose and convert it to an digital a
   ```console
     bundle install
   ```
+- Database 
+  ```console
+    rake db:create
+    rake db:migrate
+  ```
 - Start server
   ```console
     rails server
