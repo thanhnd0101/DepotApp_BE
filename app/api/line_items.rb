@@ -4,7 +4,6 @@ class LineItems < Grape::API
 
   before do
     authorize
-    set_cart
   end
 
   get do
@@ -12,13 +11,31 @@ class LineItems < Grape::API
   end
 
   params do
-    requires :document_id, type: Integer
+    requires :documentId, type: Integer
   end
   post do
-    document = Document.find(params[:document_id])
+    set_cart
+    document = Document.find(params[:documentId])
     raise 'Can not add unpublished document' unless document.publish
 
     @line_item = @cart.add_document(document);
     @line_item.save ? @line_item.to_json : GoogleJsonResponse.render_error(@line_item.errors)
+  end
+
+  namespace ':id' do
+    namespace :quantity do
+      params do
+        requires :quantity, type: Integer
+      end
+      put do
+        line_item = LineItem.find(params[:id])
+        raise 'Invalid item' unless line_item
+
+        line_item.quantity = params[:quantity]
+        line_item.save!
+        line_item.as_json
+      end
+    end
+
   end
 end

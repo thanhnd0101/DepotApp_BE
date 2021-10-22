@@ -6,12 +6,11 @@ class Cart < ApplicationRecord
   has_many :upload_media, through: :documents
 
   validates :user_id, presence: true
+  validates :completed, inclusion: {in:[true , false]}
+
   scope :by_user, ->(user_id){ joins(:user).where(user_id: user_id)}
   scope :related_images, -> { joins(:upload_media)}
-
-  def set_cart
-    @cart = Cart.find(session[:cart_id])
-  end
+  scope :pending, ->{where(completed:false)}
 
   def add_document(document)
     current_line_item = line_items.find_by(document_id: document.id);

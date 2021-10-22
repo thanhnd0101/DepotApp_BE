@@ -6,7 +6,7 @@ class API < Grape::API
       env['rack.session']
     end
   end
-  helpers Authentication
+  helpers AuthorizationConcern
 
   rescue_from :all do |e|
     rack_response({
@@ -27,4 +27,5 @@ class API < Grape::API
   mount Sessions => '/sessions'
   mount Admin => '/admin'
   mount UploadMedias => '/uploadmedias'
+  mount MarketplaceApi => '/marketplace'
 end

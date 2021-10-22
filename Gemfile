@@ -33,7 +33,9 @@ gem 'rack-test'
 source 'https://gem.fury.io/eh-devops/' do
   gem 'google_json_response'
 end
-
+gem 'jwt'
+gem 'rack-cors'
+gem 'rubyzip'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

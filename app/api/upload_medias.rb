@@ -15,10 +15,11 @@ class UploadMedias < Grape::API
     end
 
     params do
-      requires :file
+      requires :files, type: Array
     end
     post do
-      UploadImagesService.new.call(params[:file][:filename], params[:file][:tempfile], session[:user_id]).as_json
+      user = AuthorizeApiRequestService.call(request.headers)
+      UploadImagesService.new.call(params[:files], user.id).as_json
     end
   end
 end

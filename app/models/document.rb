@@ -8,7 +8,7 @@ class Document < ApplicationRecord
   validates :title, :user_id, presence:true
   validates :price, numericality: {greater_than_or_equal_to: 0.01}, allow_blank: true, allow_nil: true
   validates :image_url, allow_blank: true, format: {
-    with: /\.(gif|jpg|png)\z/i,
+    with: /\.(gif|jpg|png|jpeg)\z/i,
     message: "must be a URL for GIF, JPG, or PNG"
   }
   validates :publish, inclusion: {in:[true , false]}

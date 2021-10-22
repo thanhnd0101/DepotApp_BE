@@ -4,10 +4,11 @@ class Dam < Grape::API
   helpers CurrentCart
 
   before do
-    set_cart
+    authorize
   end
   get do
-    Document.joins(:upload_media).merge(Document.published).as_json
+    user = AuthorizeApiRequestService.call(request.headers)
+    redirect "/api/users/#{user.id}/documents"
   end
 
 

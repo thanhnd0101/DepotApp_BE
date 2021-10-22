@@ -1,10 +1,10 @@
 module CurrentOrder
   def set_order
-    if session[order_id]
-      @order = Cart.find(session[:order_id])
-    else
-      @order = Cart.create
-      session[:order_id] = @order.id
-    end
+    user = AuthorizeApiRequestService.call(request.headers)
+    @order = Order.pending.by_user(user.id)
+    @order ||= Order.create!({
+                               user_id: user.id,
+                               completed: false
+                             });
   end
 end

@@ -1,34 +1,41 @@
 class UploadImagesService
   DEFAULT_IMAGE_RELATIVE_DIR = 'public/assets/images'.freeze
-  SUPPORT_EXTENSION = %w[ jpg png ]
+  SUPPORT_EXTENSION = %w[ jpg png jpeg gif]
 
-  def call(filename, file_path, user_id)
-    # store image to location
-    unique_id = IDGeneratorService.call.upcase
-    extension = filename.split('.').last
+  def call(files, user_id)
 
-    raise "Do not support #{extension} extension" if extension.nil? || SUPPORT_EXTENSION.exclude?(extension)
+    createdDocs = []
+    files.each do |file|
+      filename = file[:filename]
+      file_path = file[:tempfile]
+      # store image to location
+      unique_id = IDGeneratorService.call
+      extension = filename.split('.').last
 
-    relative_image_path = DEFAULT_IMAGE_RELATIVE_DIR + "/#{unique_id}.jpg"
-    absolute_image_path = Rails.root.join(relative_image_path)
-    FileUtils.copy_file(file_path, absolute_image_path, preserve=false, dereference=false)
+      raise "Do not support #{extension} extension" if extension.nil? || SUPPORT_EXTENSION.exclude?(extension)
 
-    # create the document
-    document = Document.create!({
-                       title: filename,
-                       user_id: user_id,
-                       publish: false
-                       });
+      relative_image_path = DEFAULT_IMAGE_RELATIVE_DIR + "/#{unique_id}.jpg"
+      absolute_image_path = Rails.root.join(relative_image_path)
+      FileUtils.copy_file(file_path, absolute_image_path, preserve = false, dereference = false)
 
-    # create to upload image
-    UploadMedia.create!({
-                          identifier: unique_id,
-                          file_name: filename,
-                          relative_path: relative_image_path,
-                          media_type: UploadMedia::MEDIA_TYPES[:Image],
-                          document_id: document.id
-                        })
+      # create the document
+      document = Document.create!({
+                                     title: filename,
+                                     user_id: user_id,
+                                     publish: false
+                                   });
 
-    document
+      # create to upload image
+      UploadMedia.create!({
+                            identifier: unique_id,
+                            file_name: filename,
+                            relative_path: relative_image_path,
+                            media_type: UploadMedia::MEDIA_TYPES[:Image],
+                            document_id: document.id
+                          })
+      createdDocs.push(document)
+    end
+
+    createdDocs
   end
 end

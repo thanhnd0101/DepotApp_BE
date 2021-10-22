@@ -1,16 +1,15 @@
 module CurrentCart
   def set_cart
-    if session[:cart_id]
-      @cart = Cart.find(session[:cart_id])
-    else
-      @cart = Cart.create!({
-                             user_id: session[:user_id]
+    user = AuthorizeApiRequestService.call(request.headers)
+    @cart = Cart.pending.find_by(user_id: user.id)
+    @cart ||= Cart.create!({
+                             user_id: user.id,
+                             completed: false
                            });
-      session[:cart_id] = @cart.id
-    end
   end
 
   private
+
   def cart_empty?
     @cart.line_items.empty?
   end

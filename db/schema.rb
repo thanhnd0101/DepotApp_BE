@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20211005033653) do
+ActiveRecord::Schema.define(version: 20211020103440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20211005033653) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
+    t.boolean  "completed"
     t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
   end
 
@@ -52,9 +53,10 @@ ActiveRecord::Schema.define(version: 20211005033653) do
     t.text     "address"
     t.string   "email"
     t.integer  "pay_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "user_id"
+    t.decimal  "total_price"
     t.index ["user_id"], name: "index_orders_on_user_id", using: :btree
   end
 
@@ -74,6 +76,8 @@ ActiveRecord::Schema.define(version: 20211005033653) do
     t.string   "password_digest"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.string   "email"
+    t.string   "address"
   end
 
   add_foreign_key "carts", "users"

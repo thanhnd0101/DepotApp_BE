@@ -1,13 +1,19 @@
 class Users < Grape::API
   desc 'End-points for user'
+  helpers CurrentCart
+  helpers Path
 
   params do
     requires :name, type: String
     requires :password, type: String
+    requires :email, type: String
+    requires :address, type: String
   end
   post do
     @user = User.create!({
                            name: params[:name],
+                           email: params[:email],
+                           address: params[:address],
                            password: params[:password]
                          }).as_json
   end
@@ -18,13 +24,18 @@ class Users < Grape::API
 
   namespace ':id' do
     params do
-      requires :password, type: String
+      optional :password, type: String
+      optional :email, type: String
+      optional :address, type: String
     end
     put do
       @user = User.find(params[:id])
-      @user.update({
-                     password: params[:password]
-                   })
+      needToUpdateAttributes = {}
+      needToUpdateAttributes[:password] = params[:password] unless params[:password].nil?
+      needToUpdateAttributes[:email] = params[:email] unless params[:email].nil?
+      needToUpdateAttributes[:address] = params[:address] unless params[:address].nil?
+
+      @user.update!(needToUpdateAttributes)
     end
 
     get do
@@ -32,11 +43,12 @@ class Users < Grape::API
     end
 
     get :documents do
-      docs = Document.by_user(params[:id]).related_images.select(:title, :description, :price, :publish, :file_name, :relative_path, :media_type, :identifier)
+      docs = Document.by_user(params[:id]).related_images.select(:id, :title, :description, :price, :publish, :file_name, :relative_path, :media_type, :identifier)
       results = []
       docs.each do |doc|
-        path = "#{request.host_with_port}#{doc.relative_path["public".length..-1]}"
+        path = get_http_path(doc.relative_path["public".length..-1])
         results.push({
+                       id: doc.id,
                        title: doc.title,
                        description: doc.description,
                        price: doc.price,
@@ -50,17 +62,18 @@ class Users < Grape::API
       results
     end
 
-    get :carts do
-      docs = Cart.by_user(params[:id])
+    get :cart do
+      carts = Cart.by_user(params[:id])
                  .related_images
                  .select(:title, :description, :price,
                          :publish, :file_name, :relative_path,
                          :media_type, :identifier, 'line_items.id as line_item_id',
-                         'line_items.quantity as line_item_quantity', 'carts.id as cart_id')
+                         'line_items.quantity as line_item_quantity', 'carts.id as cart_id',
+                         'documents.id as document_id')
       results = []
-      docs.each do |doc|
-        path = "#{request.host_with_port}#{doc.relative_path["public".length..-1]}"
-        results.push(doc.as_json.merge({
+      carts.each do |line_item|
+        path = get_http_path(line_item.relative_path["public".length..-1])
+        results.push(line_item.as_json.merge({
                        path:  path,
                      }))
       end
@@ -68,20 +81,10 @@ class Users < Grape::API
     end
 
     get :orders do
-      docs = Order.by_user(params[:id])
-                 .related_images
-                 .select(:title, :description, :price,
-                         :publish, :file_name, :relative_path,
-                         :media_type, :identifier, 'line_items.id as line_item_id',
-                         'line_items.quantity as line_item_quantity', 'orders.id as order_id')
-      results = []
-      docs.each do |doc|
-        path = "#{request.host_with_port}#{doc.relative_path["public".length..-1]}"
-        results.push(doc.as_json.merge({
-                                         path:  path,
-                                       }))
-      end
-      results
+      orders = Order.by_user(params[:id])
+                 .select("*")
+      orders.as_json
     end
+
   end
 end

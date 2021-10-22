@@ -1,31 +1,11 @@
-
 class Documents < Grape::API
   desc 'End-point for documents'
+
+  helpers Path
 
   before do
     authorize
   end
-
-  # params do
-  #   requires :title, type:String, desc: "Document's title"
-  #   requires :price, type: BigDecimal
-  #   optional :description, type:String
-  #   requires :upload_image
-  # end
-  # post do
-  #
-  #   Document.create!({
-  #                      title: params[:title],
-  #                      description: params[:description],
-  #                      image_url: params[:image_url],
-  #                      price: params[:price],
-  #                      user_id:session[:user_id],
-  #                    })
-  #   {
-  #     message:"Success",
-  #     status: 200
-  #   }
-  # end
 
   get do
     Document.all.as_json
@@ -33,19 +13,41 @@ class Documents < Grape::API
 
   namespace ':id' do
     get do
-      Document.find(params[:id]).as_json
-    end
-    namespace :publish do
-      put do
-        doc = Document.find(params[:id])
-        doc.publish= true;
-        doc.save!
+      docs = Document.where(id: params[:id]).related_images.select(:id, :title, :description, :price, :publish, :file_name, :relative_path, :media_type, :identifier)
+      results = []
+      docs.each do |doc|
+        path = get_http_path(doc.relative_path["public".length..-1])
+        results.push({
+                       id: doc.id,
+                       title: doc.title,
+                       description: doc.description,
+                       price: doc.price,
+                       publish: doc.publish,
+                       file_name: doc.file_name,
+                       path:  path,
+                       media_type: doc.media_type,
+                       identifier: doc.identifier
+                     })
       end
-      delete do
-        doc = Document.find(params[:id])
-        doc.publish= false;
-        doc.save!
-      end
+      results
     end
+
+    params do
+      optional :title, type: String
+      optional :description, type: String
+      optional :price, type: BigDecimal
+      optional :publish, type: Boolean
+    end
+    put do
+      doc = Document.find(params[:id])
+      needToUpdateAttributes = {}
+      needToUpdateAttributes[:title] = params[:title] unless params[:title].nil?
+      needToUpdateAttributes[:description] = params[:description] unless params[:description].nil?
+      needToUpdateAttributes[:price] = params[:price] unless params[:price].nil?
+      needToUpdateAttributes[:publish] = params[:publish] unless params[:publish].nil?
+      doc.update!(needToUpdateAttributes)
+    end
+
   end
+
 end
