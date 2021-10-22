@@ -1,4 +1,4 @@
-# Depot Application
+# Depot Application Backend
 
 This project is conducted based on the tutorial from `Agile Web Development with Rails 6`
 I work on this project for rails learning purpose and convert it to an digital assets management project.
